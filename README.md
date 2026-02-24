@@ -11,44 +11,6 @@ Aplicação web para gerenciamento do checklist diário do Laboratório III do S
 - 🌓 Suporte a tema claro e escuro
 - 🔄 Navegação por abas para cada dia da semana
 
-## 📦 Como Hospedar no GitHub Pages
-
-### Passo 1: Criar o Repositório
-
-1. Acesse [GitHub](https://github.com) e faça login
-2. Clique em **"New repository"** (botão verde no canto superior direito)
-3. Preencha os campos:
-   - **Repository name**: `checklist-laboratorio` (ou nome de sua preferência)
-   - **Description**: "Checklist diário do Laboratório III - SENAC Linhares"
-   - Selecione **Public**
-   - Marque **"Add a README file"**
-4. Clique em **"Create repository"**
-
-### Passo 2: Adicionar o Arquivo HTML
-
-1. No repositório criado, clique em **"Add file"** → **"Create new file"**
-2. Nome do arquivo: `index.html`
-3. Cole todo o conteúdo do arquivo HTML da aplicação
-4. Role até o final e clique em **"Commit new file"**
-
-### Passo 3: Ativar GitHub Pages
-
-1. No seu repositório, clique em **"Settings"** (configurações)
-2. No menu lateral esquerdo, clique em **"Pages"**
-3. Em **"Source"**, selecione:
-   - Branch: **main** (ou master)
-   - Folder: **/ (root)**
-4. Clique em **"Save"**
-5. Aguarde alguns minutos e a URL será exibida:
-   - `https://seu-usuario.github.io/checklist-laboratorio/`
-
-### Passo 4: Acessar a Aplicação
-
-Sua aplicação estará disponível em:
-```
-https://seu-usuario.github.io/checklist-laboratorio/
-```
-
 ## 📝 Como Usar
 
 ### Preenchimento Semanal
