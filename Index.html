@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checklist Diário - Laboratório II</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --color-white: rgba(255, 255, 255, 1);
+            --color-black: rgba(0, 0, 0, 1);
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-400: rgba(45, 166, 178, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-success-rgb: 33, 128, 141;
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-sm: 12px;
+            --font-size-base: 14px;
+            --font-size-lg: 16px;
+            --font-size-xl: 18px;
+            --font-size-2xl: 20px;
+            --font-size-3xl: 24px;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 550;
+            --space-4: 4px;
+            --space-8: 8px;
+            --space-12: 12px;
+            --space-16: 16px;
+            --space-20: 20px;
+            --space-24: 24px;
+            --space-32: 32px;
+            --radius-sm: 6px;
+            --radius-base: 8px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --duration-normal: 250ms;
+            --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-primary-hover: var(--color-teal-400);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-btn-primary-text: var(--color-slate-900);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-success-rgb: 50, 184, 198;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.5;
+            padding: var(--space-20);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header h1 {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        .header-info {
+            font-size: var(--font-size-sm);
+            color: var(--color-text-secondary);
+            margin-bottom: var(--space-16);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-16);
+            margin-bottom: var(--space-16);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-8);
+            color: var(--color-text);
+        }
+
+        .form-control {
+            padding: var(--space-8) var(--space-12);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            background: var(--color-surface);
+            color: var(--color-text);
+            transition: border-color var(--duration-normal) var(--ease-standard);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .tabs {
+            display: flex;
+            gap: var(--space-8);
+            margin-bottom: var(--space-24);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: var(--space-12) var(--space-24);
+            background: var(--color-secondary);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            cursor: pointer;
+            font-weight: var(--font-weight-medium);
+            transition: all var(--duration-normal) var(--ease-standard);
+            color: var(--color-text);
+        }
+
+        .tab:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .tab.active {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+            border-color: var(--color-primary);
+        }
+
+        .day-content {
+            display: none;
+        }
+
+        .day-content.active {
+            display: block;
+        }
+
+        .section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-title {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--space-16);
+            display: flex;
+            align-items: center;
+            gap: var(--space-8);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-12);
+            padding: var(--space-12);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: var(--color-primary);
+        }
+
+        .item-label {
+            flex: 1;
+            font-size: var(--font-size-base);
+        }
+
+        .item-obs {
+            width: 200px;
+        }
+
+        .btn {
+            padding: var(--space-12) var(--space-24);
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: var(--font-size-base);
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--ease-standard);
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .actions {
+            display: flex;
+            gap: var(--space-12);
+            margin-top: var(--space-24);
+            flex-wrap: wrap;
+        }
+
+        .problems-section {
+            background: var(--color-surface);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-lg);
+            padding: var(--space-24);
+            margin-bottom: var(--space-24);
+        }
+
+        .problem-day {
+            margin-bottom: var(--space-16);
+        }
+
+        .problem-day label {
+            display: block;
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--space-8);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 60px;
+            resize: vertical;
+        }
+
+        .alert-box {
+            background: rgba(var(--color-success-rgb), 0.1);
+            border: 1px solid rgba(var(--color-success-rgb), 0.3);
+            border-radius: var(--radius-base);
+            padding: var(--space-16);
+            margin-top: var(--space-16);
+            display: none;
+        }
+
+        .alert-box.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .item-obs {
+                width: 150px;
+            }
+            
+            .checklist-item {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✅ Checklist Diário - Laboratório III</h1>
+            <div class="header-info">SENAC Linhares | Total: 25 Computadores | Horário: 07:30 - 11:30</div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Responsável</label>
+                    <input type="text" class="form-control" id="resp1" placeholder="Nome do responsável">
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Período: De</label>
+                    <input type="date" class="form-control" id="periodo-inicio">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Período: Até</label>
+                    <input type="date" class="form-control" id="periodo-fim">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Líder de Turma</label>
+                    <input type="text" class="form-control" id="lider" value="Luiz">
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" data-day="seg">Segunda-feira</button>
+            <button class="tab" data-day="ter">Terça-feira</button>
+            <button class="tab" data-day="qua">Quarta-feira</button>
+            <button class="tab" data-day="qui">Quinta-feira</button>
+            <button class="tab" data-day="sex">Sexta-feira</button>
+        </div>
+
+        <div id="checklist-container"></div>
+
+        <div class="problems-section">
+            <h2 class="section-title">🚨 Problemas Reportados ao Professor</h2>
+            <div class="problem-day">
+                <label>Segunda-feira:</label>
+                <textarea class="form-control" id="problema-seg"></textarea>
+            </div>
+            <div class="problem-day">
+                <label>Terça-feira:</label>
+                <textarea class="form-control" id="problema-ter"></textarea>
+            </div>
+            <div class="problem-day">
+                <label>Quarta-feira:</label>
+                <textarea class="form-control" id="problema-qua"></textarea>
+            </div>
+            <div class="problem-day">
+                <label>Quinta-feira:</label>
+                <textarea class="form-control" id="problema-qui"></textarea>
+            </div>
+            <div class="problem-day">
+                <label>Sexta-feira:</label>
+                <textarea class="form-control" id="problema-sex"></textarea>
+            </div>
+            <div style="margin-top: var(--space-16); padding: var(--space-12); background: rgba(var(--color-success-rgb), 0.1); border-radius: var(--radius-base);">
+                <strong>⚠️ Reporte Imediatamente:</strong> PC não liga | Patrimônio ausente | Jogos/apps instalados | Papel parede inapropriado | Cabos danificados
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-primary" onclick="gerarPDF()">📄 Gerar PDF Semanal</button>
+            <button class="btn btn-secondary" onclick="limparFormulario()">🔄 Limpar Tudo</button>
+        </div>
+
+        <div class="alert-box" id="alert">
+            PDF gerado com sucesso! O download deve iniciar automaticamente.
+        </div>
+    </div>
+
+    <script>
+        const dias = ['seg', 'ter', 'qua', 'qui', 'sex'];
+        const diasNomes = {
+            'seg': 'Segunda-feira',
+            'ter': 'Terça-feira',
+            'qua': 'Quarta-feira',
+            'qui': 'Quinta-feira',
+            'sex': 'Sexta-feira'
+        };
+        
+        const checklistItems = [
+            { secao: 'abertura', titulo: '✅ Abertura do Laboratório (07:30)', items: [
+                { id: 1, texto: 'Ligar ar-condicionado' },
+                { id: 2, texto: 'Acender luzes' },
+                { id: 3, texto: 'Ligar todos os 25 PCs' },
+                { id: 4, texto: 'Verificar boot correto' }
+            ]},
+            { secao: 'equipamentos', titulo: '🖥️ Equipamentos', items: [
+                { id: 5, texto: 'Monitores funcionando' },
+                { id: 6, texto: 'Teclados funcionando' },
+                { id: 7, texto: 'Mouses funcionando' },
+                { id: 8, texto: 'Caixa de som OK' },
+                { id: 9, texto: 'Datashow OK (se usar)' }
+            ]},
+            { secao: 'software', titulo: '💻 Software e Configuração', items: [
+                { id: 10, texto: 'Papel parede padrão' },
+                { id: 11, texto: '🚫 SEM JOGOS' },
+                { id: 12, texto: '🚫 SEM APPS não autorizados (Steam, Discord)' },
+                { id: 13, texto: 'Pastas/programas SENAC OK' },
+                { id: 14, texto: 'Patrimônio visível' }
+            ]},
+            { secao: 'limpeza', titulo: '🧹 Limpeza e Organização', items: [
+                { id: 15, texto: 'Sala limpa' },
+                { id: 16, texto: 'Mesas organizadas' },
+                { id: 17, texto: 'Cadeiras em bom estado' },
+                { id: 18, texto: 'Lixeiras vazias' }
+            ]},
+            { secao: 'encerramento', titulo: '🔒 Encerramento (11:30)', items: [
+                { id: 19, texto: 'Desligar 25 PCs' },
+                { id: 20, texto: 'Desligar monitores' },
+                { id: 21, texto: 'Desligar datashow' },
+                { id: 22, texto: 'Desligar caixa de som' },
+                { id: 23, texto: 'Desligar ar-condicionado' },
+                { id: 24, texto: 'Apagar luzes' },
+                { id: 25, texto: 'Trancar porta' }
+            ]}
+        ];
+
+        let currentDay = 'seg';
+        let checklistData = {};
+
+        function inicializarDados() {
+            dias.forEach(dia => {
+                checklistData[dia] = {};
+                checklistItems.forEach(secao => {
+                    secao.items.forEach(item => {
+                        checklistData[dia][item.id] = { checked: false, obs: '' };
+                    });
+                });
+            });
+        }
+
+        function renderChecklist() {
+            const container = document.getElementById('checklist-container');
+            container.innerHTML = '';
+
+            dias.forEach(dia => {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = `day-content ${dia === currentDay ? 'active' : ''}`;
+                dayDiv.id = `day-${dia}`;
+
+                checklistItems.forEach(secao => {
+                    const section = document.createElement('div');
+                    section.className = 'section';
+                    
+                    const title = document.createElement('h2');
+                    title.className = 'section-title';
+                    title.textContent = secao.titulo;
+                    section.appendChild(title);
+
+                    secao.items.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'checklist-item';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.className = 'checkbox';
+                        checkbox.checked = checklistData[dia][item.id].checked;
+                        checkbox.onchange = (e) => {
+                            checklistData[dia][item.id].checked = e.target.checked;
+                        };
+
+                        const label = document.createElement('span');
+                        label.className = 'item-label';
+                        label.textContent = `${item.id}. ${item.texto}`;
+
+                        const obs = document.createElement('input');
+                        obs.type = 'text';
+                        obs.className = 'form-control item-obs';
+                        obs.placeholder = 'Observação';
+                        obs.value = checklistData[dia][item.id].obs;
+                        obs.oninput = (e) => {
+                            checklistData[dia][item.id].obs = e.target.value;
+                        };
+
+                        itemDiv.appendChild(checkbox);
+                        itemDiv.appendChild(label);
+                        itemDiv.appendChild(obs);
+                        section.appendChild(itemDiv);
+                    });
+
+                    dayDiv.appendChild(section);
+                });
+
+                container.appendChild(dayDiv);
+            });
+        }
+
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.onclick = () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const day = tab.dataset.day;
+                    currentDay = day;
+                    
+                    document.querySelectorAll('.day-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    document.getElementById(`day-${day}`).classList.add('active');
+                };
+            });
+        }
+
+        function gerarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            const resp1 = document.getElementById('resp1').value || '__________________';
+            const periodoInicio = document.getElementById('periodo-inicio').value || '__________';
+            const periodoFim = document.getElementById('periodo-fim').value || '__________';
+            const lider = document.getElementById('lider').value || 'Luiz';
+
+            let y = 15;
+            
+            doc.setFontSize(16);
+            doc.setFont(undefined, 'bold');
+            doc.text('CHECKLIST DIARIO - LABORATORIO III', 105, y, { align: 'center' });
+            y += 8;
+            
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+            doc.text('SENAC Linhares | Total: 25 Computadores | Horario: 07:30 - 11:30', 105, y, { align: 'center' });
+            y += 10;
+            
+            doc.setFontSize(9);
+            doc.text(`RESPONSAVEL DA SEMANA: ${resp1}`, 10, y);
+            y += 5;
+            doc.text(`PERIODO: ${periodoInicio} ate ${periodoFim}`, 10, y);
+            y += 5;
+            doc.text(`LIDER DE TURMA: ${lider}`, 10, y);
+            y += 10;
+
+            doc.setFontSize(8);
+            const colWidths = [8, 70, 18, 18, 18, 18, 18, 40];
+            const headers = ['#', 'ITEM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'OBS'];
+            
+            checklistItems.forEach(secao => {
+                if (y > 250) {
+                    doc.addPage();
+                    y = 15;
+                }
+                
+                doc.setFont(undefined, 'bold');
+                doc.text(secao.titulo, 10, y);
+                y += 6;
+                
+                let x = 10;
+                headers.forEach((header, i) => {
+                    doc.text(header, x, y);
+                    x += colWidths[i];
+                });
+                y += 5;
+                
+                doc.setFont(undefined, 'normal');
+                secao.items.forEach(item => {
+                    if (y > 270) {
+                        doc.addPage();
+                        y = 15;
+                    }
+                    
+                    x = 10;
+                    doc.text(String(item.id), x, y);
+                    x += colWidths[0];
+                    
+                    const itemTexto = item.texto.substring(0, 45);
+                    doc.text(itemTexto, x, y);
+                    x += colWidths[1];
+                    
+                    dias.forEach((dia, idx) => {
+                        const checked = checklistData[dia][item.id].checked ? 'X' : '';
+                        doc.text(checked, x + 5, y);
+                        x += colWidths[2 + idx];
+                    });
+                    
+                    const obsText = dias.map(dia => checklistData[dia][item.id].obs).filter(o => o).join(', ');
+                    if (obsText) {
+                        doc.text(obsText.substring(0, 20), x, y);
+                    }
+                    
+                    y += 5;
+                });
+                
+                y += 5;
+            });
+
+            if (y > 230) {
+                doc.addPage();
+                y = 15;
+            }
+            
+            doc.setFont(undefined, 'bold');
+            doc.text('PROBLEMAS REPORTADOS AO PROFESSOR', 10, y);
+            y += 6;
+            doc.setFont(undefined, 'normal');
+            
+            dias.forEach(dia => {
+                const problema = document.getElementById(`problema-${dia}`).value;
+                if (problema) {
+                    if (y > 265) {
+                        doc.addPage();
+                        y = 15;
+                    }
+                    doc.text(`${diasNomes[dia]}: ${problema}`, 10, y, { maxWidth: 190 });
+                    y += 8;
+                }
+            });
+
+            y += 10;
+            if (y > 260) {
+                doc.addPage();
+                y = 15;
+            }
+            doc.text(`Assinatura Responsavel: ${resp1}`, 10, y);
+
+            const dataAtual = new Date().toISOString().split('T')[0];
+            doc.save(`checklist-laboratorio-${dataAtual}.pdf`);
+            
+            const alert = document.getElementById('alert');
+            alert.classList.add('show');
+            setTimeout(() => alert.classList.remove('show'), 3000);
+        }
+
+        function limparFormulario() {
+            if (confirm('Tem certeza que deseja limpar todos os dados? Esta ação não pode ser desfeita.')) {
+                inicializarDados();
+                renderChecklist();
+                document.getElementById('resp1').value = '';
+                document.getElementById('periodo-inicio').value = '';
+                document.getElementById('periodo-fim').value = '';
+                document.getElementById('lider').value = 'Luiz';
+                dias.forEach(dia => {
+                    document.getElementById(`problema-${dia}`).value = '';
+                });
+            }
+        }
+
+        inicializarDados();
+        renderChecklist();
+        setupTabs();
+    </script>
+</body>
+</html>
