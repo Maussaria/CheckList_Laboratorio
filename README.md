@@ -1,4 +1,4 @@
-# 📋 Checklist Diário - Laboratório III (Digital)
+# 📋 Checklist Diário - Laboratório II (Digital)
 
 Aplicação web para gerenciamento do checklist diário do Laboratório III do SENAC Linhares.
 
